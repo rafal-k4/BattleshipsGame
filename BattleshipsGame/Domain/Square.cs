@@ -1,4 +1,7 @@
-﻿namespace BattleshipsGame.Domain;
+﻿using BattleshipsGame.Domain.Core;
+using OneOf;
+
+namespace BattleshipsGame.Domain;
 
 public class Square
 {
@@ -18,9 +21,15 @@ public class Square
         State = SquareState.Occupied;
     }
 
-    internal void HitTarget()
+    internal OneOf<Hit, Miss, AlreadyHit> HitAndGetResult()
     {
-        State = SquareState.Hit;
+        if (State == SquareState.Empty)
+            return new Miss();
+
+        if (State == SquareState.Occupied)
+            return new Hit();
+
+        return new AlreadyHit();
     }
 
     internal char GetDisplayChar(bool shouldDisplayOccupied)
@@ -28,15 +37,15 @@ public class Square
         switch (State)
         {
             case SquareState.Empty:
-                return '*';
+                return '-';
             case SquareState.Occupied:
                 return shouldDisplayOccupied
                     ? 'O'
-                    : '*';
+                    : '-';
             case SquareState.Hit:
                 return 'X';
             case SquareState.Missed:
-                return '-';
+                return '*';
             default:
                 throw new InvalidOperationException("Invalid square state.");
         }

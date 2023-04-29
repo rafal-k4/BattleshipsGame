@@ -57,19 +57,7 @@ public class Board
     {
         var targetSquare = Squares[coordinates.RowIndex, coordinates.ColumnIndex];
 
-        if (targetSquare.State == SquareState.Empty)
-        {
-            targetSquare.HitTarget();
-            return new Miss();
-        }
-            
-        if (targetSquare.State == SquareState.Occupied)
-        {
-            targetSquare.HitTarget();
-            return new Hit();
-        }
-
-        return new AlreadyHit();
+        return targetSquare.HitAndGetResult();
     }
 
     internal List<List<Square>> GetAvailableSpacesToPlaceShip(int length, Direction direction)
