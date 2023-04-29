@@ -1,7 +1,17 @@
-﻿namespace BattleshipsGame.Domain;
+﻿using BattleshipsGame.Domain.Core;
+using OneOf;
+using System.Text;
+
+namespace BattleshipsGame.Domain;
 
 public class Board
 {
+    public enum Direction
+    {
+        Vertical = 1,
+        Horizontal
+    }
+
     internal const int BOARD_HEIGHT = 10;
     internal const int BOARD_LENGTH = 10;
 
@@ -17,6 +27,49 @@ public class Board
                 Squares[r, c] = new Square(r, c);
             }
         }
+    }
+
+    internal string GetBoardAsString(bool shouldDisplayShipPositions)
+    {
+        var board = new StringBuilder();
+
+        var columns = $"  {string.Join(" ", Enumerable.Range(0, BOARD_LENGTH))}";
+        board.AppendLine(columns);
+
+        for (int rowIndex = 0; rowIndex < BOARD_HEIGHT; rowIndex++)
+        {
+            var boardRow = new StringBuilder();
+            boardRow.Append((char)('A' + rowIndex) + " ");
+
+            for (int colIndex = 0; colIndex < BOARD_LENGTH; colIndex++)
+            {
+                var square = Squares[rowIndex, colIndex];
+
+                boardRow.Append($"{square.GetDisplayChar(shouldDisplayShipPositions)} ");
+            }
+            board.AppendLine(boardRow.ToString());
+        }
+
+        return board.ToString();
+    }
+
+    internal OneOf<Hit, Miss, AlreadyHit> HitTarget(Coordinates coordinates)
+    {
+        var targetSquare = Squares[coordinates.RowIndex, coordinates.ColumnIndex];
+
+        if (targetSquare.State == SquareState.Empty)
+        {
+            targetSquare.HitTarget();
+            return new Miss();
+        }
+            
+        if (targetSquare.State == SquareState.Occupied)
+        {
+            targetSquare.HitTarget();
+            return new Hit();
+        }
+
+        return new AlreadyHit();
     }
 
     internal List<List<Square>> GetAvailableSpacesToPlaceShip(int length, Direction direction)

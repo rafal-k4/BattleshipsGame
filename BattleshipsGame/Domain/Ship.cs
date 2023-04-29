@@ -2,9 +2,9 @@
 
 public class Ship
 {
-    public List<Square> Squares { get; }
+    internal List<Square> Squares { get; }
 
-    public readonly int Length;
+    internal readonly int Length;
 
     public Ship(int lengthOfShip)
     {
@@ -12,7 +12,7 @@ public class Ship
         Length = lengthOfShip;
     }
 
-    public bool IsSunk()
+    internal bool IsSunk()
     {
         foreach (var square in Squares)
         {

@@ -2,7 +2,7 @@
 
 public class Square
 {
-    internal SquareState State { get; set; }
+    internal SquareState State { get; private set; }
     internal int Row { get; }
     internal int Column { get; }
 
@@ -16,6 +16,11 @@ public class Square
     internal void Occupy()
     {
         State = SquareState.Occupied;
+    }
+
+    internal void HitTarget()
+    {
+        State = SquareState.Hit;
     }
 
     internal char GetDisplayChar(bool shouldDisplayOccupied)

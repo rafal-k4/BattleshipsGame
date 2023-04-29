@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using BattleshipsGame.Domain.Core;
+using OneOf;
 
 namespace BattleshipsGame.Domain;
 
@@ -7,6 +8,7 @@ public class Game
     private Board Board { get; }
     private Random Random { get; }
     private List<Ship> Ships { get; }
+
     private GameSettings GameSettings { get; }
 
     public Game(GameSettings gameSettings)
@@ -14,33 +16,43 @@ public class Game
         Board = new Board();
         Random = new Random();
         Ships = new List<Ship>();
+        GameSettings = gameSettings;
 
         PrepareGame();
-        GameSettings = gameSettings;
+    }
+
+    public bool IsGameFinished()
+    {
+        return Ships.All(x => x.IsSunk());
     }
 
     public string GetBoard()
     {
-        var board = new StringBuilder();
+        return Board.GetBoardAsString(GameSettings.DisplayShipPositions);
+    }
 
-        var columns = $"  {string.Join(" ", Enumerable.Range(0, Board.BOARD_LENGTH))}";
-        board.AppendLine(columns);
-        
-        for (int rowIndex = 0; rowIndex < Board.BOARD_HEIGHT; rowIndex++)
-        {
-            var boardRow = new StringBuilder();
-            boardRow.Append((char)('A' + rowIndex) + " ");
-            
-            for (int colIndex = 0; colIndex < Board.BOARD_LENGTH; colIndex++)
-            {
-                var square = Board.Squares[rowIndex, colIndex];
+    public OneOf<Hit, Miss, Sunk, AlreadyHit, CoordinatesNotInRange> HitTarget(Coordinates coordinates)
+    {
+        if (coordinates.RowIndex > Board.BOARD_HEIGHT - 1 || coordinates.ColumnIndex > Board.BOARD_LENGTH - 1)
+            return new CoordinatesNotInRange();
 
-                boardRow.Append($"{square.GetDisplayChar(GameSettings.DisplayShipPositions)} ");
-            }
-            board.AppendLine(boardRow.ToString());
-        }
+        return Board
+            .HitTarget(coordinates)
+            .Match<OneOf<Hit, Miss, Sunk, AlreadyHit, CoordinatesNotInRange>>(
+                hit => 
+                {
+                    var targetedShip = GetShipByCoordinate(coordinates);
+                    return targetedShip.IsSunk()
+                        ? new Sunk()
+                        : hit;
+                },
+                miss => miss,
+                alreadyHit => alreadyHit);
+    }
 
-        return board.ToString();
+    private Ship GetShipByCoordinate(Coordinates coordinates)
+    {
+        return Ships.Single(x => x.Squares.Any(x => x.Row == coordinates.RowIndex && x.Column == coordinates.ColumnIndex));
     }
 
     private void PrepareGame()
@@ -53,9 +65,9 @@ public class Game
     {
         foreach(var ship in Ships)
         {
-            var directionValues = typeof(Direction).GetEnumValues();
+            var directionValues = typeof(Board.Direction).GetEnumValues();
             var randomIndex = Random.Next(directionValues.Length);
-            var randomDirection = (Direction)directionValues.GetValue(randomIndex)!;
+            var randomDirection = (Board.Direction)directionValues.GetValue(randomIndex)!;
 
             var freeSpaces = Board.GetAvailableSpacesToPlaceShip(ship.Length, randomDirection);
 
@@ -78,10 +90,4 @@ public class Game
         Ships.Add(destroyer1);
         Ships.Add(destroyer2);
     }
-}
-
-public enum Direction
-{
-    Vertical = 1,
-    Horizontal
 }
