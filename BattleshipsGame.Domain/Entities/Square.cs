@@ -32,11 +32,17 @@ internal class Square
     internal OneOf<Hit, Miss, AlreadyHit> HitAndGetResult()
     {
         if (State == SquareState.Empty)
+        {
+            State = SquareState.Missed;
             return new Miss();
-
+        }
+            
         if (State == SquareState.Occupied)
+        {
+            State = SquareState.Hit;
             return new Hit();
-
+        }
+            
         return new AlreadyHit();
     }
 

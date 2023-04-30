@@ -14,6 +14,9 @@ internal class Ship
 
     internal bool IsSunk()
     {
+        if (!Squares.Any())
+            throw new ArgumentException("Squares were not assigned");
+
         foreach (var square in Squares)
         {
             if (square.State != Square.SquareState.Hit)
@@ -24,9 +27,12 @@ internal class Ship
         return true;
     }
 
-    internal void OccupySpace(List<Square> randomlyChosenFreeSpace)
+    internal void OccupySpace(List<Square> squareToOccupy)
     {
-        foreach (var square in randomlyChosenFreeSpace)
+        if (squareToOccupy.Count != Length)
+            throw new ArgumentException($"Square count {{{squareToOccupy.Count}}} does not correspond to expected Length {{{Length}}} of this ship");
+
+        foreach (var square in squareToOccupy)
         {
             square.Occupy();
             Squares.Add(square);
