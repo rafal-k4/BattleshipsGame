@@ -35,17 +35,20 @@ public class Game
         return Board.GetBoardAsString(GameSettings.DisplayShipPositions);
     }
 
-    public OneOf<Hit, Miss, Sunk, AlreadyHit, CoordinatesNotInRange> HitTarget(Coordinates coordinates)
+    public OneOf<Hit, Miss, Sunk, AlreadyHit, CoordinatesNotInRange, InvalidCoordinates> HitTarget(string? coordinates)
     {
-        if (coordinates.RowIndex > Board.BOARD_HEIGHT - 1 || coordinates.ColumnIndex > Board.BOARD_LENGTH - 1)
+        if (!Coordinates.TryFrom(coordinates, out var coordinatesValue))
+            return new InvalidCoordinates();
+
+        if (coordinatesValue.RowIndex > Board.BOARD_HEIGHT - 1 || coordinatesValue.ColumnIndex > Board.BOARD_LENGTH - 1)
             return new CoordinatesNotInRange();
 
         return Board
-            .HitTarget(coordinates)
-            .Match<OneOf<Hit, Miss, Sunk, AlreadyHit, CoordinatesNotInRange>>(
+            .HitTarget(coordinatesValue)
+            .Match<OneOf<Hit, Miss, Sunk, AlreadyHit, CoordinatesNotInRange, InvalidCoordinates>>(
                 hit =>
                 {
-                    var targetedShip = GetShipByCoordinate(coordinates);
+                    var targetedShip = GetShipByCoordinate(coordinatesValue);
                     return targetedShip.IsSunk()
                         ? new Sunk()
                         : hit;
