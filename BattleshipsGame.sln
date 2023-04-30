@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleshipsGame", "BattleshipsGame\BattleshipsGame.csproj", "{C867874B-CBB4-4A4A-B9DC-87A91580A812}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleShipsGameTests", "BattleShipsGameTests\BattleShipsGameTests.csproj", "{E8E52461-9CDA-4C42-B191-52EF4CD4333C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleShipsGame.Domain.Tests", "BattleShipsGameTests\BattleShipsGame.Domain.Tests.csproj", "{E8E52461-9CDA-4C42-B191-52EF4CD4333C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleshipsGame.Domain", "BattleshipsGame.Domain\BattleshipsGame.Domain.csproj", "{9BD4B3B5-698D-4FEC-A5BC-521E4B580B4A}"
 EndProject

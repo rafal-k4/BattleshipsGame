@@ -12,20 +12,15 @@ public class Coordinates : ValueOf<string?, Coordinates>
 
     protected override void Validate()
     {
-        throw new NotImplementedException();
-    }
-
-    protected override bool TryValidate()
-    {
         if (string.IsNullOrWhiteSpace(Value))
-            return false;
+            throw new InvalidCoordinatesException();
 
         Value = Value?.Trim();
 
         var regexMatch = CoordinatesRegex.Match(Value!);
 
         if (!regexMatch.Success)
-            return false;
+            throw new InvalidCoordinatesException();
 
         const int letterCapturedGroupIndex = 1;
         const int numberCapturedGroupIndex = 2;
@@ -33,7 +28,22 @@ public class Coordinates : ValueOf<string?, Coordinates>
 
         RowIndex = char.Parse(rowLetter) - 'A';
         ColumnIndex = int.Parse(regexMatch.Groups[numberCapturedGroupIndex].Value);
-
-        return true;
     }
+
+    protected override bool TryValidate()
+    {
+        try
+        {
+            Validate();
+            return true;
+        }
+        catch (InvalidCoordinatesException)
+        {
+            return false;
+        }
+    }
+}
+
+public class InvalidCoordinatesException : ArgumentException
+{ 
 }

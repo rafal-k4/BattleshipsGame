@@ -7,16 +7,18 @@ namespace BattleshipsGame.Domain;
 
 public class Game
 {
+    internal List<Ship> Ships { get; }
+
     private Board Board { get; }
     private Random Random { get; }
-    private List<Ship> Ships { get; }
-
     private GameSettings GameSettings { get; }
 
     public Game(GameSettings gameSettings)
     {
         Board = new Board();
-        Random = new Random();
+        Random = gameSettings.RandomSeed.HasValue
+            ? new Random(gameSettings.RandomSeed.Value)
+            : new Random();
         Ships = new List<Ship>();
         GameSettings = gameSettings;
 
