@@ -33,32 +33,21 @@ while (game.IsGameFinished() == false)
 
     ClearCurrentConsoleLine();
     Console.Write("Enter target: ");
-    string? input = Console.ReadLine();
-
-    Coordinates coordinates;
-    while(Coordinates.TryFrom(input, out coordinates) == false)
-    {
-        Console.WriteLine("Wrong target, target should contain one letter and number, examples: [A0, B4, J9]");
-
-        Console.SetCursorPosition(boardBottomCursorPosition.Left, boardBottomCursorPosition.Top);
-        ClearCurrentConsoleLine();
-
-        Console.Write("Enter target: ");
-        input = Console.ReadLine();
-    }
+    string? userInputCoordinates = Console.ReadLine();
 
     Console.SetCursorPosition(displayResultLine.Left, displayResultLine.Top);
     ClearCurrentConsoleLine();
     Console.SetCursorPosition(displayResultLine.Left, displayResultLine.Top);
 
-    var result = game.HitTarget(coordinates);
+    var result = game.HitTarget(userInputCoordinates);
 
     Console.WriteLine(result.Match(
         hit => "Hit!",
         miss => "Miss!",
         sunk => "Ship sunk, keep up good job!",
         alreadyHit => "Target already hit, please try again.",
-        coordinatesNotInRange => "Coordinates are out of the scope of the board, please provide a valid ones"));
+        coordinatesNotInRange => "Coordinates are out of the scope of the board, please provide a valid ones",
+        invalidCoordinates => "Wrong target, target should contain one letter and number, examples: [A0, B4, J9]"));
 }
 
 Console.WriteLine("Congratulations! You won!");

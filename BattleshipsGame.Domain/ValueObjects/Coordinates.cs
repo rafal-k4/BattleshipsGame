@@ -3,10 +3,10 @@ using ValueOf;
 
 namespace BattleshipsGame.Domain.ValueObjects;
 
-public class Coordinates : ValueOf<string?, Coordinates>
+internal class Coordinates : ValueOf<string?, Coordinates>
 {
-    public int RowIndex { get; private set; }
-    public int ColumnIndex { get; private set; }
+    internal int RowIndex { get; private set; }
+    internal int ColumnIndex { get; private set; }
 
     private static readonly Regex CoordinatesRegex = new(@"^([a-zA-Z]{1})(\d+)$", RegexOptions.Compiled);
 
@@ -44,6 +44,6 @@ public class Coordinates : ValueOf<string?, Coordinates>
     }
 }
 
-public class InvalidCoordinatesException : ArgumentException
+internal class InvalidCoordinatesException : ArgumentException
 { 
 }
