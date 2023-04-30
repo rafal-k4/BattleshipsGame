@@ -11,7 +11,7 @@
 *.sln.docstates
 
 # SpecFile auto-generated files
-[Ff]eatures/*.feature.cs
+*.feature.cs
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
