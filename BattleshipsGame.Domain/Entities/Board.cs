@@ -1,12 +1,13 @@
 ﻿using BattleshipsGame.Domain.Core;
+using BattleshipsGame.Domain.ValueObjects;
 using OneOf;
 using System.Text;
 
-namespace BattleshipsGame.Domain;
+namespace BattleshipsGame.Domain.Entities;
 
-public class Board
+internal class Board
 {
-    public enum Direction
+    internal enum Direction
     {
         Vertical = 1,
         Horizontal
@@ -15,9 +16,9 @@ public class Board
     internal const int BOARD_HEIGHT = 10;
     internal const int BOARD_LENGTH = 10;
 
-    public Square[,] Squares { get; }
+    internal Square[,] Squares { get; }
 
-    public Board()
+    internal Board()
     {
         Squares = new Square[BOARD_HEIGHT, BOARD_LENGTH];
         for (int r = 0; r < BOARD_HEIGHT; r++)
@@ -62,27 +63,27 @@ public class Board
 
     internal List<List<Square>> GetAvailableSpacesToPlaceShip(int length, Direction direction)
     {
+        var rowsLength = Squares.GetLength(0);
+        var colsLength = Squares.GetLength(1);
+
         return direction == Direction.Horizontal
-            ? GetHorizontalAvailableSpaces(length)
-            : GetVerticalAvailableSpaces(length);
+            ? GetHorizontalAvailableSpaces(length, rowsLength, colsLength)
+            : GetVerticalAvailableSpaces(length, rowsLength, colsLength);
     }
 
-    private List<List<Square>> GetVerticalAvailableSpaces(int length)
+    private List<List<Square>> GetVerticalAvailableSpaces(int length, int rowsLength, int colsLength)
     {
         var availableSpaces = new List<List<Square>>();
 
-        var rowsNumber = Squares.GetLength(0);
-        var colsNumber = Squares.GetLength(1);
-
-        for (int rowIndex = 0; rowIndex < rowsNumber - length; rowIndex++)
+        for (int rowIndex = 0; rowIndex < rowsLength - length; rowIndex++)
         {
-            for (int colIndex = 0; colIndex < colsNumber; colIndex++)
+            for (int colIndex = 0; colIndex < colsLength; colIndex++)
             {
                 var freeSquares = new List<Square>();
                 bool canFit = true;
                 for (int shipOffset = 0; shipOffset < length; shipOffset++)
                 {
-                    if (Squares[rowIndex + shipOffset, colIndex].State != SquareState.Empty)
+                    if (Squares[rowIndex + shipOffset, colIndex].State != Square.SquareState.Empty)
                     {
                         canFit = false;
                         break;
@@ -101,22 +102,19 @@ public class Board
         return availableSpaces;
     }
 
-    private List<List<Square>> GetHorizontalAvailableSpaces(int length)
+    private List<List<Square>> GetHorizontalAvailableSpaces(int length, int rowsLength, int colsLength)
     {
         var availableSpaces = new List<List<Square>>();
-        
-        var rowsNumber = Squares.GetLength(0);
-        var colsNumber = Squares.GetLength(1);
 
-        for(int rowIndex = 0; rowIndex < rowsNumber; rowIndex++)
+        for (int rowIndex = 0; rowIndex < rowsLength; rowIndex++)
         {
-            for(int colIndex = 0; colIndex < colsNumber - length; colIndex++)
+            for (int colIndex = 0; colIndex < colsLength - length; colIndex++)
             {
                 var freeSquares = new List<Square>();
                 bool canFit = true;
                 for (int shipOffset = 0; shipOffset < length; shipOffset++)
                 {
-                    if (Squares[rowIndex, colIndex + shipOffset].State != SquareState.Empty)
+                    if (Squares[rowIndex, colIndex + shipOffset].State != Square.SquareState.Empty)
                     {
                         canFit = false;
                         break;

@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using ValueOf;
 
-namespace BattleshipsGame.Domain;
+namespace BattleshipsGame.Domain.ValueObjects;
 
 public class Coordinates : ValueOf<string?, Coordinates>
 {

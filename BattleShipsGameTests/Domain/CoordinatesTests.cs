@@ -1,5 +1,4 @@
-﻿using BattleshipsGame.Domain;
-
+﻿using BattleshipsGame.Domain.ValueObjects;
 
 namespace BattleShipsGameTests.Domain;
 

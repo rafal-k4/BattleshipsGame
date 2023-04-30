@@ -1,4 +1,6 @@
 ﻿using BattleshipsGame.Domain.Core;
+using BattleshipsGame.Domain.Entities;
+using BattleshipsGame.Domain.ValueObjects;
 using OneOf;
 
 namespace BattleshipsGame.Domain;
@@ -39,7 +41,7 @@ public class Game
         return Board
             .HitTarget(coordinates)
             .Match<OneOf<Hit, Miss, Sunk, AlreadyHit, CoordinatesNotInRange>>(
-                hit => 
+                hit =>
                 {
                     var targetedShip = GetShipByCoordinate(coordinates);
                     return targetedShip.IsSunk()
@@ -63,7 +65,7 @@ public class Game
 
     private void PlaceShipsOnBoard()
     {
-        foreach(var ship in Ships)
+        foreach (var ship in Ships)
         {
             var directionValues = typeof(Board.Direction).GetEnumValues();
             var randomIndex = Random.Next(directionValues.Length);

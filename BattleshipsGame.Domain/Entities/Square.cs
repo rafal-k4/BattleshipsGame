@@ -1,15 +1,23 @@
 ﻿using BattleshipsGame.Domain.Core;
 using OneOf;
 
-namespace BattleshipsGame.Domain;
+namespace BattleshipsGame.Domain.Entities;
 
-public class Square
+internal class Square
 {
+    internal enum SquareState
+    {
+        Empty,
+        Occupied,
+        Hit,
+        Missed
+    }
+
     internal SquareState State { get; private set; }
     internal int Row { get; }
     internal int Column { get; }
 
-    public Square(int row, int column)
+    internal Square(int row, int column)
     {
         Row = row;
         Column = column;
@@ -50,12 +58,4 @@ public class Square
                 throw new InvalidOperationException("Invalid square state.");
         }
     }
-}
-
-public enum SquareState
-{
-    Empty,
-    Occupied,
-    Hit,
-    Missed
 }

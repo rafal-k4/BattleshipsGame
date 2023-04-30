@@ -1,4 +1,5 @@
 ﻿using BattleshipsGame.Domain;
+using BattleshipsGame.Domain.ValueObjects;
 
 var gameSettings = new GameSettings()
 {

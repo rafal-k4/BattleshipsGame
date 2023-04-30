@@ -1,12 +1,12 @@
-﻿namespace BattleshipsGame.Domain;
+﻿namespace BattleshipsGame.Domain.Entities;
 
-public class Ship
+internal class Ship
 {
     internal List<Square> Squares { get; }
 
     internal readonly int Length;
 
-    public Ship(int lengthOfShip)
+    internal Ship(int lengthOfShip)
     {
         Squares = new List<Square>();
         Length = lengthOfShip;
@@ -16,7 +16,7 @@ public class Ship
     {
         foreach (var square in Squares)
         {
-            if (square.State != SquareState.Hit)
+            if (square.State != Square.SquareState.Hit)
             {
                 return false;
             }
@@ -26,7 +26,7 @@ public class Ship
 
     internal void OccupySpace(List<Square> randomlyChosenFreeSpace)
     {
-        foreach(var square in randomlyChosenFreeSpace)
+        foreach (var square in randomlyChosenFreeSpace)
         {
             square.Occupy();
             Squares.Add(square);
